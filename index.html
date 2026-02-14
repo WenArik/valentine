@@ -6,17 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Только для тебя ❤️</title>
     <style>
-        body {
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+
+        body {
             font-family: 'Segoe UI', 'Cursive', sans-serif;
             min-height: 100vh;
             overflow: hidden;
             position: relative;
             background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Падающие сердечки */
+        #main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            position: relative;
+            padding: 0 20px;
+        }
+
         .snowfall {
             position: absolute;
             top: 0;
@@ -62,14 +76,12 @@
             }
         }
 
-        /* Центральный блок */
         .content {
             position: relative;
             z-index: 10;
             text-align: center;
             padding: 40px 20px;
             max-width: 700px;
-            margin: 80px auto;
             background: rgba(255, 255, 255, 0.65);
             backdrop-filter: blur(2px);
             border-radius: 20px;
@@ -153,7 +165,7 @@
             }
         }
 
-        /* Стрелки */
+        /* === СТРЕЛКИ (только на ПК) === */
         .nav-arrow {
             position: fixed;
             top: 50%;
@@ -169,39 +181,54 @@
             border-radius: 50%;
             cursor: pointer;
             box-shadow: none;
-            z-index: 1000;
+            z-index: 4000;
             user-select: none;
-            transition: opacity 0.4s, transform 0.3s;
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             opacity: 1;
+            visibility: visible;
             pointer-events: auto;
         }
 
-        .nav-arrow.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
         .arrow-left {
-            left: calc(50% - 380px);
+            left: 10px;
         }
 
         .arrow-right {
-            right: calc(50% - 380px);
+            right: 10px;
         }
 
-        .nav-arrow:hover:not(.hidden) {
-            transform: translateY(-50%) scale(1.2);
+        /* === МОБИЛЬНЫЕ КНОПКИ === */
+        .mobile-controls {
+            margin-top: 24px;
+            display: none;
         }
 
-        /* Общие стили колонн */
+        .mobile-btn {
+            background: rgba(194, 24, 91, 0.2);
+            color: #c2185b;
+            border: 2px solid #c2185b;
+            border-radius: 12px;
+            padding: 8px 16px;
+            font-size: 16px;
+            margin: 0 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .mobile-btn:hover {
+            background: rgba(194, 24, 91, 0.3);
+            transform: scale(1.03);
+        }
+
+        /* === КОЛОННЫ === */
         .column {
             position: fixed;
             top: 20px;
             bottom: 20px;
-            height: auto;
             width: 280px;
+            max-width: 90vw;
             overflow-y: auto;
-            z-index: 999;
+            z-index: 3000;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -211,6 +238,7 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
             transform: translateX(-100%);
             transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .column.right {
@@ -222,14 +250,13 @@
         }
 
         .column.left {
-            background: rgba(255, 255, 255, 0.2);
+            left: 0;
         }
 
         .column.active {
             transform: translateX(0);
         }
 
-        /* Фото в левой колонне */
         .column.left img {
             width: 240px;
             border-radius: 12px;
@@ -254,7 +281,7 @@
         }
 
         .column.left.active img:nth-child(3) {
-            transition-delay: 1s;
+            transition-delay: 1.0s;
         }
 
         .column.left.active img:nth-child(4) {
@@ -265,7 +292,6 @@
             transition-delay: 1.8s;
         }
 
-        /* Текст в правой колонне */
         .column-text {
             padding: 20px;
             font-size: 18px;
@@ -289,143 +315,296 @@
             color: #ffcdd2;
             font-weight: bold;
         }
+
+        /* === КНОПКА МУЗЫКИ === */
+        #music-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 2000;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        #music-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* === АДАПТИВНОСТЬ === */
+        @media (max-width: 480px) {
+            .content {
+                padding: 25px 15px;
+                max-width: none;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            p {
+                font-size: 17px;
+            }
+
+            .signature {
+                font-size: 19px;
+            }
+
+            .heart-icon {
+                font-size: 80px;
+            }
+
+            .column {
+                width: 240px;
+                padding: 20px 8px;
+            }
+
+            .column-text {
+                font-size: 16px;
+                padding: 15px;
+            }
+
+            .column.left img {
+                width: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-arrow {
+                display: none !important;
+            }
+
+            .mobile-controls {
+                display: block;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .nav-arrow {
+                top: 45%;
+            }
+        }
     </style>
 </head>
 
 <body>
 
-    <!-- Аудио без autoplay -->
-    <audio src="idea5.mp3" loop></audio>
+    <div id="main-container">
+        <audio src="idea5.mp3" loop></audio>
+        <div class="snowfall" id="snowfall"></div>
 
-    <!-- Падающие сердечки -->
-    <div class="snowfall" id="snowfall"></div>
+        <!-- Стрелки (только на ПК) -->
+        <div class="nav-arrow arrow-left" id="toggleLeft">→</div>
+        <div class="nav-arrow arrow-right" id="toggleRight">←</div>
 
-    <!-- Стрелки -->
-    <div class="nav-arrow arrow-left" id="toggleLeft">→</div>
-    <div class="nav-arrow arrow-right" id="toggleRight">←</div>
+        <!-- Кнопка музыки -->
+        <button id="music-toggle">▶️</button>
 
-    <!-- Центральный контент -->
-    <div class="content">
-        <div class="heart-icon">❤️</div>
-        <h1>Моя любовь...</h1>
-        <p>
-            Ты — самый тёплый лучик в моей жизни.<br>
-            Даже когда мы далеко, я чувствую твоё дыхание в каждом своём вдохе.<br>
-            Спасибо, что ты есть.
-        </p>
-        <p>
-            Этот день — повод напомнить:<br>
-            <strong>ты — мой выбор, моя нежность, моё «навсегда».</strong>
-        </p>
-        <div class="signature">— Твой любимыйм😘</div>
-    </div>
+        <div class="content">
+            <div class="heart-icon">❤️</div>
+            <h1>Моя любовь...</h1>
+            <p>
+                Ты — самый тёплый лучик в моей жизни.<br>
+                Даже когда мы далеко, я всегда думаю о тебе и очень сильно люблю!<br>
+            </p>
+            <p>
+                Этот день — повод напомнить:<br>
+                <strong>ты — мой выбор, моя нежность, моё «навсегда».</strong>
+            </p>
 
-    <!-- Левая колонна (фото) -->
-    <div class="column left" id="columnLeft">
-        <img src="left1.png" alt="Фото 1">
-        <img src="left2.png" alt="Фото 2">
-        <img src="left3.png" alt="Фото 3">
-        <img src="left4.png" alt="Фото 4">
-        <img src="left5.png" alt="Фото 5">
-    </div>
+            <!-- Мобильные кнопки -->
+            <div class="mobile-controls">
+                <button class="mobile-btn" id="mobileLeft">📸</button>
+                <button class="mobile-btn" id="mobileRight">💌</button>
+            </div>
 
-    <!-- Правая колонна (текст) -->
-    <div class="column right" id="columnRight">
-        <div class="column-text">
-            Зайка, я тебя очень сильно люблю. Ты — самый дорогой человек в моей жизни. Спасибо тебе за то, что делаешь
-            мою жизнь лучше и ярче каждый день уже на протяжении полугода. Хочу, чтобы это длилось вечно.<br><br>
-            Люблю тебя, солнышко, очень-очень сильно 💖<br>
-            Ты — моё спокойствие, моё счастье, мой лучик света в этом мире. Спасибо тебе за всё… 🌟<br><br>
-            Целую 🫶💋 и крепко-крепко обнимаю 🤗💕
+            <div class="signature">— Твой любимый 😘</div>
+        </div>
+
+        <div class="column left" id="columnLeft">
+            <img src="left1.png" alt="Фото 1">
+            <img src="left2.png" alt="Фото 2">
+            <img src="left3.png" alt="Фото 3">
+            <img src="left4.png" alt="Фото 4">
+            <img src="left5.png" alt="Фото 5">
+        </div>
+
+        <div class="column right" id="columnRight">
+            <div class="column-text">
+                Зайка, я тебя очень сильно люблю. Ты — самый дорогой человек в моей жизни. Спасибо тебе за то, что
+                делаешь мою жизнь лучше и ярче каждый день уже на протяжении полугода. Спасибо любимая!<br><br>
+                Люблю тебя, солнышко, очень-очень сильно 💖<br>
+                Ты — моё спокойствие, моё счастье, мой лучик света в этом мире. Спасибо тебе за всё… 🌟<br><br>
+                Целую 🫶💋 и крепко-крепко обнимаю 🤗💕
+            </div>
         </div>
     </div>
 
     <script>
         window.addEventListener('load', () => {
-            // Показываем фоновые сердечки
+            // Снег
             const snowfall = document.getElementById('snowfall');
-            setTimeout(() => {
-                snowfall.classList.add('active');
-            }, 300);
+            setTimeout(() => snowfall.classList.add('active'), 300);
 
-            // Генерация падающих сердечек
             const heartSymbols = ['❤️', '💖', '💗', '💓', '💕', '💘'];
             const count = 30;
-
             for (let i = 0; i < count; i++) {
                 const heart = document.createElement('div');
                 heart.classList.add('heart-flake');
                 heart.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
-
                 heart.style.left = `${Math.random() * 100}vw`;
                 heart.style.fontSize = `${16 + Math.random() * 14}px`;
+                const duration = (window.innerWidth < 480) ? (3 + Math.random() * 4) : (5 + Math.random() * 7);
+                heart.style.animationDuration = `${duration}s`;
                 heart.style.animationDelay = `${Math.random() * 3}s`;
-                heart.style.animationDuration = `${5 + Math.random() * 7}s`;
-
                 snowfall.appendChild(heart);
             }
 
-            // Управление колоннами и стрелками
+            // Элементы
             const colLeft = document.getElementById('columnLeft');
             const colRight = document.getElementById('columnRight');
             const btnLeft = document.getElementById('toggleLeft');
             const btnRight = document.getElementById('toggleRight');
-            const arrows = document.querySelectorAll('.nav-arrow');
+            const mobileLeft = document.getElementById('mobileLeft');
+            const mobileRight = document.getElementById('mobileRight');
 
-            function updateArrows() {
-                const isOpen = colLeft.classList.contains('active') || colRight.classList.contains('active');
-                arrows.forEach(el => {
-                    el.classList.toggle('hidden', isOpen);
+            // Сброс стрелок в исходное состояние
+            function resetArrows() {
+                if (window.innerWidth <= 768) return;
+                btnLeft.style.transform = 'translateY(-50%)';
+                btnRight.style.transform = 'translateY(-50%)';
+                btnLeft.style.opacity = '1';
+                btnRight.style.opacity = '1';
+                btnLeft.style.visibility = 'visible';
+                btnRight.style.visibility = 'visible';
+                btnLeft.style.pointerEvents = 'auto';
+                btnRight.style.pointerEvents = 'auto';
+            }
+
+            // Открыть колонну с анимацией стрелки
+            function openColumnWithArrow(column, otherColumn, arrow, isLeft) {
+                // Закрываем другую колонну
+                otherColumn.classList.remove('active');
+
+                // Анимируем стрелку
+                if (isLeft) {
+                    arrow.style.transform = 'translateX(280px) translateY(-50%)';
+                } else {
+                    arrow.style.transform = 'translateX(-280px) translateY(-50%)';
+                }
+
+                // Через время анимации — скрываем ВСЕ стрелки
+                setTimeout(() => {
+                    if (window.innerWidth > 768) {
+                        btnLeft.style.opacity = '0';
+                        btnRight.style.opacity = '0';
+                        btnLeft.style.visibility = 'hidden';
+                        btnRight.style.visibility = 'hidden';
+                        btnLeft.style.pointerEvents = 'none';
+                        btnRight.style.pointerEvents = 'none';
+                    }
+                }, 200);
+
+                // Открываем колонну
+                column.classList.add('active');
+            }
+
+            // Закрыть колонны и вернуть стрелки
+            function closeColumns() {
+                colLeft.classList.remove('active');
+                colRight.classList.remove('active');
+                resetArrows();
+            }
+
+            // Обработчики ПК
+            btnLeft.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openColumnWithArrow(colLeft, colRight, btnLeft, true);
+            });
+
+            btnRight.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openColumnWithArrow(colRight, colLeft, btnRight, false);
+            });
+
+            // Мобильные кнопки
+            if (mobileLeft) {
+                mobileLeft.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    colLeft.classList.add('active');
+                    colRight.classList.remove('active');
+                });
+            }
+            if (mobileRight) {
+                mobileRight.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    colRight.classList.add('active');
+                    colLeft.classList.remove('active');
                 });
             }
 
-            btnLeft.addEventListener('click', () => {
-                colLeft.classList.toggle('active');
-                updateArrows();
-            });
-
-            btnRight.addEventListener('click', () => {
-                colRight.classList.toggle('active');
-                updateArrows();
-            });
-
             // Закрытие по клику вне
             document.addEventListener('click', (e) => {
-                let changed = false;
+                const insideLeft = colLeft.contains(e.target);
+                const insideRight = colRight.contains(e.target);
+                const onMobileBtn =
+                    (mobileLeft && mobileLeft.contains(e.target)) ||
+                    (mobileRight && mobileRight.contains(e.target));
+                const onArrow = e.target === btnLeft || e.target === btnRight;
 
-                if (colLeft.classList.contains('active') && !colLeft.contains(e.target) && !btnLeft.contains(e.target)) {
-                    colLeft.classList.remove('active');
-                    changed = true;
+                if (!insideLeft && !insideRight && !onMobileBtn && !onArrow) {
+                    closeColumns();
                 }
-                if (colRight.classList.contains('active') && !colRight.contains(e.target) && !btnRight.contains(e.target)) {
-                    colRight.classList.remove('active');
-                    changed = true;
-                }
-
-                if (changed) updateArrows();
             });
 
-            // === МУЗЫКА: запуск после первого взаимодействия ===
+            // Музыка
             const audio = document.querySelector('audio');
-            let audioPlayed = false;
+            const musicBtn = document.getElementById('music-toggle');
+            let isPlaying = false;
 
-            if (audio) {
-                audio.volume = 0.35; // 35% громкости — нежно и уютно
-            }
+            if (audio) audio.volume = 0.35;
 
-            function playAudio() {
-                if (!audioPlayed && audio) {
-                    audio.play().then(() => {
-                        audioPlayed = true;
-                    }).catch(e => {
-                        console.log("Автоплей заблокирован:", e);
-                    });
+            musicBtn.addEventListener('click', () => {
+                if (!audio) return;
+                if (isPlaying) {
+                    audio.pause();
+                    musicBtn.textContent = '▶️';
+                } else {
+                    const playPromise = audio.play();
+                    if (playPromise !== undefined) {
+                        playPromise.then(() => {
+                            musicBtn.textContent = '⏸️';
+                        }).catch(e => {
+                            console.warn("Autoplay blocked:", e);
+                            alert("Браузер заблокировал воспроизведение. Попробуй нажать ещё раз.");
+                        });
+                    }
                 }
-            }
+                isPlaying = !isPlaying;
+            });
 
-            // Запуск при любом клике или касании
-            document.addEventListener('click', playAudio);
-            document.addEventListener('touchstart', playAudio, { once: true });
+            const unlockAudio = () => {
+                if (audio && !isPlaying) {
+                    audio.play().then(() => {
+                        isPlaying = true;
+                        musicBtn.textContent = '⏸️';
+                    }).catch(() => { });
+                }
+            };
+            document.addEventListener('click', unlockAudio, { once: true });
+            document.addEventListener('touchstart', unlockAudio, { once: true });
+
+            // Изначальное состояние
+            resetArrows();
         });
     </script>
 </body>
